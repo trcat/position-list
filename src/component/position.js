@@ -16,6 +16,8 @@ const newPositionListStyle= {
     height: '300px'
 }
 let defaultTop = 0;
+let timer = null;
+let runSrcoll = null;
 
 /**
  * position component
@@ -29,27 +31,15 @@ function Position(props) {
 
     const [items, setItems] = useState(props.items || []);
 
-    // Render Function
+    // Handler Function
 
-    /**
-     * 渲染 position list
-     * @param {Array<{id:string, position:string, url:string, city:string, time:number}>} items 
-     * @return {Array<Element> | Element}
-     */
-    function renderList(items) {
-        return items.map((item, index) => {
-            let time = Date.now() - item.time;
-            time = Math.round(time / 1000 / 60);
-            return (
-                <li key={`${item.id}`}>
-                    <a className="position" href={item.url} title={item.position}> 
-                        {item.position}
-                    </a>
-                    <em className="time">{time > 0 ? `${time}分钟之前` : '刚刚'}</em>
-                    <em className="city">{item.city}</em>
-                </li>
-            )
-        })
+    function mouseEnterList() {
+        clearInterval(timer);
+        timer = null;
+    }
+
+    function mouseLeaveList() {
+        typeof runSrcoll === 'function' && runSrcoll();
     }
 
     // Effect
@@ -62,11 +52,10 @@ function Position(props) {
         let top = defaultTop;
         list.style.top = `${top}px`;
         const limit = top - (listHeight / 2);
-        let timer = null;
 
-        function runSrcoll() {
+        runSrcoll = () => {
             timer = setInterval(() => {
-                if (top !== limit) {
+                if (top !== limit && items.length > 0) {
                     top -= 1;
                     list.style.top = `${top}px`;
                 } else {
@@ -74,31 +63,24 @@ function Position(props) {
                     timer = null;
 
                     //更新 items
-                    new Promise((res, rej) => {
-                        res(props.getItems(items.length / 2, items.slice(0, items.length / 2)))
-                    }).then((newItems) => {
-                        if (newItems instanceof Array) {
-                            setItems((items) => {
-                                let result = items.slice(items.length / 2);
-                                result = result.concat(newItems);
-                                return result;
-                            })
-                        }
-                    })
+                    if (typeof props.getItems === 'function') {
+                        new Promise((res, rej) => {
+                            res(props.getItems(items.length / 2, items.slice(0, items.length / 2)))
+                        }).then((newItems) => {
+                            if (newItems instanceof Array) {
+                                setItems((items) => {
+                                    let result = items.slice(items.length / 2);
+                                    result = result.concat(newItems);
+                                    return result;
+                                })
+                            }
+                        })
+                    }
                 }
             }, props.speed || 10);
         };
 
         runSrcoll();
-
-        list.addEventListener('mouseenter', () => {
-            clearInterval(timer);
-            timer = null;
-        });
-
-        list.addEventListener('mouseleave', () => {
-            runSrcoll();
-        })
 
         return () => {
             list.style.top = `${defaultTop}px`;
@@ -114,8 +96,18 @@ function Position(props) {
                         {props.tool && <props.tool/>}
                     </div>
                     <ul className="position-list" 
+                        onMouseEnter={mouseEnterList}
+                        onMouseLeave={mouseLeaveList}
                         ref={positionListRef}>
-                        {renderList(items)}
+                        {items.map((item, index) => (
+                            <li key={`${item.id}`}>
+                                <a className="position" href={item.url} title={item.position}> 
+                                    {item.position}
+                                </a>
+                                <em className="time">{item.time}</em>
+                                <em className="city">{item.city}</em>
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </div>
