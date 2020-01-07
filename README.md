@@ -1,68 +1,42 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 写在最前面
 
-## Available Scripts
+为了方便起见，本次元件的是做主要说使用 create-react-app 脚手架来实现的，具体代码在 `/src` 文件夹中。
 
-In the project directory, you can run:
 
-### `npm start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+本项目可以至 `https://trcat.github.io/position-list/` 页面进行查看。其中的数据是我简单制作的，主要是为了测试方便。
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 元件的使用
 
-### `npm run build`
+主要包含一下参数：
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| 属性名   | 类型            | 是否必填 | 描述                                                    |
+| -------- | --------------- | -------- | ------------------------------------------------------- |
+| title    | string          | 选填     | 区块的标题。                                            |
+| more     | React Component | 选填     | 位于元件的右上角，充当工具按钮，拓展元件功能。          |
+| speed    | number          | 选填     | 列表内容滚动速度。值的单位为毫秒，不填则滚动速度为 `10` |
+| items    | array           | 选填     | 列表中的内容，如果没有内容则传空数组                    |
+| getItems | function        | 选填     | 向元件外部索要新的内容                                  |
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### items
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+由上表可知，items 是一个数组，该数组成员如下：
 
-### `npm run eject`
+| 属性名   | 类型   | 是否必填 | 描述                       |
+| -------- | ------ | -------- | -------------------------- |
+| id       | string | 必填     | 唯一标识                   |
+| contents | Array  | 必填     | 文本内容，成员是 string    |
+| url      | string | 必填     | 点击岗位文本内容跳转的地址 |
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### getItems
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+这个 function 主要作用是元件向外部获取新的数据。该函数有两个参数：
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+| 属性名 | 类型   | 是否必传 | 描述                                     |
+| ------ | ------ | -------- | ---------------------------------------- |
+| askNum | number | 是       | 还需要多少数据                           |
+| showed | Array  | 是       | 已滚动展示过的数据，成员就是上面的 Items |
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
