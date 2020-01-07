@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import Position from './component/position';
 
 const title = '最新职位';
-const moreUrl = 'https://job.alibaba.com/zhaopin/positionList.html?';
 const speed = 30;
 let count = 0;
 function getItemsSource(begin, end) {
@@ -32,8 +31,11 @@ const getItems = function (askNum, showed) {
 
     return result;
 }
+function tool(props) {
+    return <a href={'https://job.alibaba.com/zhaopin/positionList.html?'}>更多</a>;
+}
 
 ReactDOM.render(
-    <Position title={title} moreUrl={moreUrl} speed={speed} items={items} getItems={getItems}/>,
+    <Position title={title} tool={tool} speed={speed} items={items} getItems={getItems}/>,
     document.getElementById('root')
 );

@@ -71,6 +71,7 @@ function Position(props) {
                     list.style.top = `${top}px`;
                 } else {
                     clearInterval(timer);
+                    timer = null;
 
                     //更新 items
                     new Promise((res, rej) => {
@@ -85,13 +86,14 @@ function Position(props) {
                         }
                     })
                 }
-            }, props.speed);
+            }, props.speed || 10);
         };
 
         runSrcoll();
 
         list.addEventListener('mouseenter', () => {
             clearInterval(timer);
+            timer = null;
         });
 
         list.addEventListener('mouseleave', () => {
@@ -109,9 +111,7 @@ function Position(props) {
                 <div className="newPosition-list" style={newPositionListStyle}>
                     <div className="more-positon">
                         {props.title}
-                        {props.moreUrl && <a className="clickMorePosition" href={props.moreUrl}>
-                            更多
-                        </a>}
+                        {props.tool && <props.tool/>}
                     </div>
                     <ul className="position-list" 
                         ref={positionListRef}>
