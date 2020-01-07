@@ -21,7 +21,7 @@ let runSrcoll = null;
 
 /**
  * position component
- * @param {title:string, moreUrl:string, items:Array<{id:string, position:string, url:string, city:string, time:number}>, getItems:Function} props 
+ * @param {title:string, moreUrl:string, items:Array<{id:string, url:string, contents:Array}>, getItems:Function} props 
  */
 function Position(props) {
     // Ref
@@ -34,12 +34,16 @@ function Position(props) {
     // Handler Function
 
     function mouseEnterList() {
-        clearInterval(timer);
-        timer = null;
+        if (positionListRef) {
+            clearInterval(timer);
+            timer = null;
+        }
     }
 
     function mouseLeaveList() {
-        typeof runSrcoll === 'function' && runSrcoll();
+        if (positionListRef && timer === null) {
+            typeof runSrcoll === 'function' && runSrcoll();
+        }
     }
 
     // Effect
@@ -63,19 +67,28 @@ function Position(props) {
                     timer = null;
 
                     //更新 items
-                    if (typeof props.getItems === 'function') {
-                        new Promise((res, rej) => {
+                    new Promise((res, rej) => {
+                        if (typeof props.getItems === 'function') {
                             res(props.getItems(items.length / 2, items.slice(0, items.length / 2)))
-                        }).then((newItems) => {
-                            if (newItems instanceof Array) {
-                                setItems((items) => {
-                                    let result = items.slice(items.length / 2);
-                                    result = result.concat(newItems);
-                                    return result;
-                                })
-                            }
-                        })
-                    }
+                        } else {
+                            res([]);
+                        }
+                    }).then((newItems) => {
+                        if (newItems instanceof Array && newItems.length > 0) {
+                            setItems((items) => {
+                                let result = items.slice(items.length / 2);
+                                result = result.concat(newItems);
+                                return result;
+                            })
+                        } else {
+                            // 如果没有新的内容，就把旧的内容重新轮播一遍
+                            setItems((items) => {
+                                let result = items.slice(items.length / 2);
+                                result = result.concat(items.slice(0, items.length / 2));
+                                return result;
+                            })
+                        }
+                    })
                 }
             }, props.speed || 10);
         };
@@ -101,11 +114,11 @@ function Position(props) {
                         ref={positionListRef}>
                         {items.map((item, index) => (
                             <li key={`${item.id}`}>
-                                <a className="position" href={item.url} title={item.position}> 
-                                    {item.position}
+                                <a className="title" href={item.url} title={item.contents[0]}> 
+                                    {item.contents[0]}
                                 </a>
-                                <em className="time">{item.time}</em>
-                                <em className="city">{item.city}</em>
+                                <em className="gray">{item.contents[2]}</em>
+                                <em className="text">{item.contents[1]}</em>
                             </li>
                         ))}
                     </ul>

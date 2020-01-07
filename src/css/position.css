@@ -17,7 +17,7 @@
 	padding: 0 14px;
 	line-height: 50px;
 }
-.newPosition-list .position-list li .position {
+.newPosition-list .position-list li .title {
 	float: left;
 	color: #3C99D8;
 	cursor: pointer;
@@ -27,7 +27,7 @@
 	text-overflow:ellipsis;
 	white-space: nowrap;
 }
-.newPosition-list .position-list li .time {
+.newPosition-list .position-list li .gray {
 	font-style: normal;
 	float: right;
 	width: 70px;
@@ -35,7 +35,7 @@
 	font-size: 14px;
 	color: rgba(31,56,88,0.60);
 } 
-.newPosition-list .position-list li .city {
+.newPosition-list .position-list li .text {
 	float: right;
 	font-style: normal;
 	font-size: 14px;

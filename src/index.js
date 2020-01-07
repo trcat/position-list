@@ -9,12 +9,11 @@ function getItemsSource(begin, end) {
     const result = [];
 
     for (let i = begin; i < begin + end; i++) {
+        const contents = [`这是第 ${i + 1} 个岗位`, `这是第 ${i + 1} 个岗位的城市`, `不知道多久`];
         result.push({
             id: i.toString(),
-            position: `这是第 ${i + 1} 个岗位`,
             url: 'https://job.alibaba.com/zhaopin/positionList.html?',
-            city: `这是第 ${i + 1} 个岗位的城市`,
-            time: Date.now()
+            contents: contents
         })
     }
 
