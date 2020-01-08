@@ -69,8 +69,6 @@ function Position(props) {
                     top -= 1;
                     list.style.top = `${top}px`;
                 } else {
-                    clearTimer();
-
                     //更新 items
                     new Promise((res, rej) => {
                         if (typeof props.getItems === 'function') {
