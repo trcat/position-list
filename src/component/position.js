@@ -55,13 +55,6 @@ function Position(props) {
     // Effect
 
     useEffect(() => {
-        if (timer && typeof runSrcoll === 'function') {
-            clearTimer();
-            runSrcoll()
-        }
-    }, [props.speed])
-
-    useEffect(() => {
         const list = positionListRef.current;
         const listRect = list.getBoundingClientRect();
         const listHeight = listRect.bottom - listRect.top;
@@ -109,8 +102,12 @@ function Position(props) {
 
         return () => {
             list.style.top = `${defaultTop}px`;
+
+            if (timer) {
+                clearTimer();
+            }
         }
-    }, [items])
+    })
 
     return (
         <div className="newPosition" style={newPositionStyle}>
