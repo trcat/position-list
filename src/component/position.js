@@ -1,4 +1,4 @@
-import React, { createRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import '../css/position.css'
 
 const newPositionStyle = {
@@ -25,7 +25,7 @@ let runSrcoll = null;
  */
 function Position(props) {
     // Ref
-    const positionListRef = createRef();
+    const positionListRef = useRef(null);
 
     // State
 
@@ -53,6 +53,13 @@ function Position(props) {
     }
 
     // Effect
+
+    useEffect(() => {
+        if (timer && typeof runSrcoll === 'function') {
+            clearTimer();
+            runSrcoll()
+        }
+    }, [props.speed])
 
     useEffect(() => {
         const list = positionListRef.current;
@@ -104,13 +111,6 @@ function Position(props) {
             list.style.top = `${defaultTop}px`;
         }
     }, [items])
-
-    useEffect(() => {
-        if (timer && typeof runSrcoll === 'function') {
-            clearTimer();
-            runSrcoll()
-        }
-    }, [props.speed])
 
     return (
         <div className="newPosition" style={newPositionStyle}>
