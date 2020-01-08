@@ -15,9 +15,6 @@ const newPositionListStyle= {
     width: '850px',
     height: '300px'
 }
-let defaultTop = 0;
-let timer = null;
-let runSrcoll = null;
 
 /**
  * position component
@@ -26,6 +23,9 @@ let runSrcoll = null;
 function Position(props) {
     // Ref
     const positionListRef = useRef(null);
+    const defaultTop = useRef(0);
+    const timer = useRef(null);
+    const runSrcoll = useRef(null);
 
     // State
 
@@ -34,9 +34,9 @@ function Position(props) {
     // Handler Function
 
     function clearTimer() {
-        if (timer) {
-            clearInterval(timer);
-            timer = null;
+        if (timer.current) {
+            clearInterval(timer.current);
+            timer.current = null;
         }
     }
 
@@ -47,8 +47,8 @@ function Position(props) {
     }
 
     function mouseLeaveList() {
-        if (positionListRef && timer === null) {
-            typeof runSrcoll === 'function' && runSrcoll();
+        if (positionListRef && timer.current === null) {
+            typeof runSrcoll.current === 'function' && (runSrcoll.current)();
         }
     }
 
@@ -58,13 +58,13 @@ function Position(props) {
         const list = positionListRef.current;
         const listRect = list.getBoundingClientRect();
         const listHeight = listRect.bottom - listRect.top;
-        defaultTop = list.offsetTop;
-        let top = defaultTop;
+        defaultTop.current = list.offsetTop;
+        let top = defaultTop.current;
         list.style.top = `${top}px`;
         const limit = top - (listHeight / 2);
 
-        runSrcoll = () => {
-            timer = setInterval(() => {
+        runSrcoll.current = () => {
+            timer.current = setInterval(() => {
                 if (top !== limit && items.length > 0) {
                     top -= 1;
                     list.style.top = `${top}px`;
@@ -96,12 +96,12 @@ function Position(props) {
             }, props.speed || 10);
         };
 
-        runSrcoll();
+        (runSrcoll.current)();
 
         return () => {
-            list.style.top = `${defaultTop}px`;
+            list.style.top = `${defaultTop.current}px`;
 
-            if (timer) {
+            if (timer.current) {
                 clearTimer();
             }
         }
