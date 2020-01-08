@@ -33,10 +33,16 @@ function Position(props) {
 
     // Handler Function
 
-    function mouseEnterList() {
-        if (positionListRef) {
+    function clearTimer() {
+        if (timer) {
             clearInterval(timer);
             timer = null;
+        }
+    }
+
+    function mouseEnterList() {
+        if (positionListRef) {
+            clearTimer();
         }
     }
 
@@ -63,8 +69,7 @@ function Position(props) {
                     top -= 1;
                     list.style.top = `${top}px`;
                 } else {
-                    clearInterval(timer);
-                    timer = null;
+                    clearTimer();
 
                     //更新 items
                     new Promise((res, rej) => {
@@ -98,7 +103,14 @@ function Position(props) {
         return () => {
             list.style.top = `${defaultTop}px`;
         }
-    })
+    }, [items])
+
+    useEffect(() => {
+        if (timer && typeof runSrcoll === 'function') {
+            clearTimer();
+            runSrcoll()
+        }
+    }, [props.speed])
 
     return (
         <div className="newPosition" style={newPositionStyle}>
